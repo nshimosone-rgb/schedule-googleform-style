@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>失業保険の無料カウンセリング</title>
+
+  <style>
+    body{
+      margin:0;
+      background:#f0ebf8;
+      font-family: Arial, sans-serif;
+      color:#202124;
+    }
+
+    .container{
+      max-width:700px;
+      margin:30px auto;
+      padding:0 16px;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:8px;
+      margin-bottom:16px;
+      overflow:hidden;
+      box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .header-top{
+      height:10px;
+      background:#00897b;
+    }
+
+    .header-content{
+      padding:24px;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:32px;
+      font-weight:bold;
+    }
+
+    .description{
+      line-height:1.7;
+      font-size:15px;
+    }
+
+    .section{
+      padding:24px;
+    }
+
+    .section-title{
+      font-size:18px;
+      margin-bottom:20px;
+      font-weight:bold;
+    }
+
+    .required{
+      color:#d93025;
+    }
+
+    .field{
+      margin-bottom:28px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:8px;
+      font-size:15px;
+    }
+
+    input{
+      width:100%;
+      border:none;
+      border-bottom:1px solid #ccc;
+      padding:10px 0;
+      font-size:16px;
+      outline:none;
+    }
+
+    input:focus{
+      border-bottom:2px solid #00897b;
+    }
+
+    .dates,
+    .times{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .date-btn,
+    .time-btn{
+      border:1px solid #ccc;
+      border-radius:999px;
+      padding:10px 16px;
+      cursor:pointer;
+      background:#fff;
+      transition:0.2s;
+    }
+
+    .selected{
+      background:#1a73e8;
+      color:#fff;
+      border-color:#1a73e8;
+    }
+
+    .submit-btn{
+      width:100%;
+      background:#1a73e8;
+      color:#fff;
+      border:none;
+      padding:14px;
+      border-radius:6px;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    .submit-btn:disabled{
+      opacity:0.6;
+      cursor:not-allowed;
+    }
+
+    .message{
+      margin-top:20px;
+      padding:16px;
+      border-radius:6px;
+      line-height:1.7;
+      display:none;
+    }
+
+    .success{
+      background:#e6f4ea;
+      color:#137333;
+    }
+
+    .error{
+      background:#fce8e6;
+      color:#c5221f;
+    }
+
+    .loading{
+      display:none;
+      margin-top:12px;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+    <div class="header-top"></div>
+
+    <div class="header-content">
+      <h1>失業保険の無料カウンセリング</h1>
+
+      <div class="description">
+        国の制度を使えば、最大28ヶ月もの期間、失業保険の給付を受け取れる可能性があります。<br><br>
+        まずは専門家との無料カウンセリングをお申し込みください🙌
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">
+
+      <div class="section-title">
+        日程を選択 <span class="required">*</span>
+      </div>
+
+      <div id="dates" class="dates"></div>
+
+      <br>
+
+      <div id="times" class="times"></div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">
+
+      <div class="field">
+        <label>お名前（ひらがな） <span class="required">*</span></label>
+        <input type="text" id="nameKana">
+      </div>
+
+      <div class="field">
+        <label>電話番号 <span class="required">*</span></label>
+        <input type="tel" id="phone">
+      </div>
+
+      <div class="field">
+        <label>メールアドレス <span class="required">*</span></label>
+        <input type="email" id="email">
+      </div>
+
+      <div class="field">
+        <label>
+          <input type="checkbox" id="confirmed">
+          確認済み
+        </label>
+      </div>
+
+      <button id="submitBtn" class="submit-btn">
+        この内容で予約する
+      </button>
+
+      <div id="loading" class="loading">
+        送信中...
+      </div>
+
+      <div id="successMessage" class="message success"></div>
+
+      <div id="errorMessage" class="message error"></div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+const selected = {
+  date: '',
+  time: ''
+};
+
+async function loadSlots() {
+
+  try {
+
+    const response = await fetch('/api/slots');
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || '空き枠取得失敗');
+    }
+
+    renderDates(data.dates);
+
+  } catch (error) {
+
+    showError(error.message);
+
+  }
+
+}
+
+function renderDates(dates) {
+
+  const datesEl = document.getElementById('dates');
+  datesEl.innerHTML = '';
+
+  dates.forEach(date => {
+
+    const btn = document.createElement('button');
+
+    btn.className = 'date-btn';
+    btn.textContent = date.label;
+
+    btn.onclick = () => {
+
+      document.querySelectorAll('.date-btn')
+        .forEach(el => el.classList.remove('selected'));
+
+      btn.classList.add('selected');
+
+      selected.date = date.value;
+
+      renderTimes(date.times);
+
+    };
+
+    datesEl.appendChild(btn);
+
+  });
+
+}
+
+function renderTimes(times) {
+
+  const timesEl = document.getElementById('times');
+  timesEl.innerHTML = '';
+
+  times.forEach(time => {
+
+    const btn = document.createElement('button');
+
+    btn.className = 'time-btn';
+    btn.textContent = time.label;
+
+    btn.onclick = () => {
+
+      document.querySelectorAll('.time-btn')
+        .forEach(el => el.classList.remove('selected'));
+
+      btn.classList.add('selected');
+
+      selected.time = time.start;
+
+    };
+
+    timesEl.appendChild(btn);
+
+  });
+
+}
+
+function showError(message) {
+
+  const el = document.getElementById('errorMessage');
+
+  el.style.display = 'block';
+  el.textContent = message;
+
+}
+
+function showSuccess(message) {
+
+  const el = document.getElementById('successMessage');
+
+  el.style.display = 'block';
+  el.innerHTML = message;
+
+}
+
+document.getElementById('submitBtn').onclick = async () => {
+
+  try {
+
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('successMessage').style.display = 'none';
+
+    const nameKana = document.getElementById('nameKana').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const confirmed = document.getElementById('confirmed').checked;
+
+    if (!selected.date) throw new Error('日付を選択してください');
+    if (!selected.time) throw new Error('時間を選択してください');
+    if (!nameKana) throw new Error('名前を入力してください');
+    if (!phone) throw new Error('電話番号を入力してください');
+    if (!email) throw new Error('メールアドレスを入力してください');
+    if (!confirmed) throw new Error('確認事項にチェックしてください');
+
+    document.getElementById('loading').style.display = 'block';
+
+    const response = await fetch('/api/book', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nameKana,
+        phone,
+        email,
+        bookingDate: selected.date,
+        bookingStartTime: selected.time,
+        confirmed: '確認済み'
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || '予約失敗');
+    }
+
+    showSuccess(`
+      予約が完了しました。<br><br>
+      日付：${data.bookingDate}<br>
+      時間：${data.bookingStartTime}〜${data.bookingEndTime}
+    `);
+
+  } catch (error) {
+
+    showError(error.message);
+
+  } finally {
+
+    document.getElementById('loading').style.display = 'none';
+
+  }
+
+};
+
+loadSlots();
+
+</script>
+
+</body>
+</html>
