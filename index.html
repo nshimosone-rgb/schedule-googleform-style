@@ -6,393 +6,494 @@
   <title>失業保険の無料カウンセリング</title>
 
   <style>
-    body{
-      margin:0;
-      background:#f0ebf8;
-      font-family: Arial, sans-serif;
-      color:#202124;
+    * {
+      box-sizing: border-box;
     }
 
-    .container{
-      max-width:700px;
-      margin:30px auto;
-      padding:0 16px;
+    body {
+      margin: 0;
+      background: #f0ebf8;
+      font-family: Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      color: #202124;
     }
 
-    .card{
-      background:#fff;
-      border-radius:8px;
-      margin-bottom:16px;
-      overflow:hidden;
-      box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    .container {
+      max-width: 720px;
+      margin: 24px auto;
+      padding: 0 12px 40px;
     }
 
-    .header-top{
-      height:10px;
-      background:#00897b;
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(60, 64, 67, 0.18);
+      border: 1px solid #dadce0;
     }
 
-    .header-content{
-      padding:24px;
+    .header-top {
+      height: 10px;
+      background: #00897b;
     }
 
-    h1{
-      margin:0 0 12px;
-      font-size:32px;
-      font-weight:bold;
+    .header-content,
+    .section {
+      padding: 24px;
     }
 
-    .description{
-      line-height:1.7;
-      font-size:15px;
+    h1 {
+      margin: 0 0 14px;
+      font-size: 30px;
+      line-height: 1.35;
+      font-weight: 700;
     }
 
-    .section{
-      padding:24px;
+    .description {
+      line-height: 1.8;
+      font-size: 14px;
+      color: #202124;
     }
 
-    .section-title{
-      font-size:18px;
-      margin-bottom:20px;
-      font-weight:bold;
+    .notice {
+      margin-top: 18px;
+      color: #d93025;
+      font-size: 13px;
     }
 
-    .required{
-      color:#d93025;
+    .section-title {
+      font-size: 18px;
+      margin-bottom: 18px;
+      font-weight: 700;
     }
 
-    .field{
-      margin-bottom:28px;
+    .required {
+      color: #d93025;
+      margin-left: 4px;
     }
 
-    .field label{
-      display:block;
-      margin-bottom:8px;
-      font-size:15px;
+    .field {
+      margin-bottom: 28px;
     }
 
-    input{
-      width:100%;
-      border:none;
-      border-bottom:1px solid #ccc;
-      padding:10px 0;
-      font-size:16px;
-      outline:none;
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #202124;
     }
 
-    input:focus{
-      border-bottom:2px solid #00897b;
+    .help {
+      font-size: 12px;
+      line-height: 1.7;
+      color: #5f6368;
+      margin: -2px 0 8px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #dadce0;
+      padding: 10px 0;
+      font-size: 15px;
+      outline: none;
+      background: transparent;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="email"]:focus {
+      border-bottom: 2px solid #00897b;
     }
 
     .dates,
-    .times{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
+    .times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .times {
+      margin-top: 18px;
     }
 
     .date-btn,
-    .time-btn{
-      border:1px solid #ccc;
-      border-radius:999px;
-      padding:10px 16px;
-      cursor:pointer;
-      background:#fff;
-      transition:0.2s;
+    .time-btn {
+      border: 1px solid #dadce0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      cursor: pointer;
+      background: #fff;
+      color: #202124;
+      font-size: 14px;
+      transition: 0.15s;
     }
 
-    .selected{
-      background:#1a73e8;
-      color:#fff;
-      border-color:#1a73e8;
+    .date-btn:hover,
+    .time-btn:hover {
+      background: #f8fafd;
+      border-color: #1a73e8;
     }
 
-    .submit-btn{
-      width:100%;
-      background:#1a73e8;
-      color:#fff;
-      border:none;
-      padding:14px;
-      border-radius:6px;
-      font-size:16px;
-      cursor:pointer;
+    .selected {
+      background: #1a73e8;
+      color: #fff;
+      border-color: #1a73e8;
     }
 
-    .submit-btn:disabled{
-      opacity:0.6;
-      cursor:not-allowed;
+    .empty {
+      color: #5f6368;
+      font-size: 14px;
+      line-height: 1.7;
+      display: none;
     }
 
-    .message{
-      margin-top:20px;
-      padding:16px;
-      border-radius:6px;
-      line-height:1.7;
-      display:none;
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0 24px;
     }
 
-    .success{
-      background:#e6f4ea;
-      color:#137333;
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      flex: 0 0 auto;
+      accent-color: #1a73e8;
     }
 
-    .error{
-      background:#fce8e6;
-      color:#c5221f;
+    .checkbox-row label {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      cursor: pointer;
     }
 
-    .loading{
-      display:none;
-      margin-top:12px;
-      font-size:14px;
+    .submit-btn {
+      width: 100%;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 6px;
+      line-height: 1.8;
+      display: none;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .success {
+      background: #e6f4ea;
+      color: #137333;
+    }
+
+    .error {
+      background: #fce8e6;
+      color: #c5221f;
+    }
+
+    .loading {
+      display: none;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #5f6368;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        margin: 0 auto;
+        padding: 0 8px 32px;
+      }
+
+      .header-content,
+      .section {
+        padding: 20px 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .date-btn,
+      .time-btn {
+        width: calc(50% - 5px);
+        padding: 11px 10px;
+        font-size: 13px;
+        text-align: center;
+      }
+
+      .submit-btn {
+        padding: 14px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
 
-<div class="container">
-
-  <div class="card">
-    <div class="header-top"></div>
-
-    <div class="header-content">
-      <h1>失業保険の無料カウンセリング</h1>
-
-      <div class="description">
-        国の制度を使えば、最大28ヶ月もの期間、失業保険の給付を受け取れる可能性があります。<br><br>
-        まずは専門家との無料カウンセリングをお申し込みください🙌
+    <div class="card">
+      <div class="header-top"></div>
+      <div class="header-content">
+        <h1>失業保険の無料カウンセリング</h1>
+        <div class="description">
+          国の制度を使えば、最大28ヶ月もの期間、失業保険の給付を受け取れる可能性があります。<br><br>
+          まずは専門家との無料カウンセリングをお申し込みください🙌
+        </div>
+        <div class="notice">* 必須の質問です</div>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="section">
-
-      <div class="section-title">
-        日程を選択 <span class="required">*</span>
+    <div class="card">
+      <div class="section">
+        <div class="section-title">日程を選択<span class="required">*</span></div>
+        <div id="dates" class="dates"></div>
+        <div id="emptyDates" class="empty">現在、選択できる日程がありません。</div>
+        <div id="times" class="times"></div>
+        <div id="emptyTimes" class="empty">この日付で選択できる時間がありません。</div>
       </div>
-
-      <div id="dates" class="dates"></div>
-
-      <br>
-
-      <div id="times" class="times"></div>
-
     </div>
-  </div>
 
-  <div class="card">
-    <div class="section">
+    <div class="card">
+      <div class="section">
 
-      <div class="field">
-        <label>お名前（ひらがな） <span class="required">*</span></label>
-        <input type="text" id="nameKana">
-      </div>
+        <div class="field">
+          <label>お名前（ひらがな）<span class="required">*</span></label>
+          <input type="text" id="nameKana" placeholder="回答を入力">
+        </div>
 
-      <div class="field">
-        <label>電話番号 <span class="required">*</span></label>
-        <input type="tel" id="phone">
-      </div>
+        <div class="field">
+          <label>電話番号<span class="required">*</span></label>
+          <div class="help">
+            ご記入いただいたお電話番号は、ご本人確認や重要なご連絡のみに使用します。
+          </div>
+          <input type="tel" id="phone" placeholder="回答を入力">
+        </div>
 
-      <div class="field">
-        <label>メールアドレス <span class="required">*</span></label>
-        <input type="email" id="email">
-      </div>
+        <div class="field">
+          <label>メールアドレス<span class="required">*</span></label>
+          <input type="email" id="email" placeholder="回答を入力">
+        </div>
 
-      <div class="field">
-        <label>
+        <div class="checkbox-row">
           <input type="checkbox" id="confirmed">
-          確認済み
-        </label>
+          <label for="confirmed">確認済み</label>
+        </div>
+
+        <button id="submitBtn" class="submit-btn">この内容で予約する</button>
+
+        <div id="loading" class="loading">送信中...</div>
+        <div id="successMessage" class="message success"></div>
+        <div id="errorMessage" class="message error"></div>
+
       </div>
-
-      <button id="submitBtn" class="submit-btn">
-        この内容で予約する
-      </button>
-
-      <div id="loading" class="loading">
-        送信中...
-      </div>
-
-      <div id="successMessage" class="message success"></div>
-
-      <div id="errorMessage" class="message error"></div>
-
     </div>
+
   </div>
 
-</div>
+  <script>
+    let scheduleData = [];
 
-<script>
-
-const selected = {
-  date: '',
-  time: ''
-};
-
-async function loadSlots() {
-
-  try {
-
-    const response = await fetch('/api/slots');
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.message || '空き枠取得失敗');
-    }
-
-    renderDates(data.dates);
-
-  } catch (error) {
-
-    showError(error.message);
-
-  }
-
-}
-
-function renderDates(dates) {
-
-  const datesEl = document.getElementById('dates');
-  datesEl.innerHTML = '';
-
-  dates.forEach(date => {
-
-    const btn = document.createElement('button');
-
-    btn.className = 'date-btn';
-    btn.textContent = date.label;
-
-    btn.onclick = () => {
-
-      document.querySelectorAll('.date-btn')
-        .forEach(el => el.classList.remove('selected'));
-
-      btn.classList.add('selected');
-
-      selected.date = date.value;
-
-      renderTimes(date.times);
-
+    const selected = {
+      date: '',
+      time: ''
     };
 
-    datesEl.appendChild(btn);
-
-  });
-
-}
-
-function renderTimes(times) {
-
-  const timesEl = document.getElementById('times');
-  timesEl.innerHTML = '';
-
-  times.forEach(time => {
-
-    const btn = document.createElement('button');
-
-    btn.className = 'time-btn';
-    btn.textContent = time.label;
-
-    btn.onclick = () => {
-
-      document.querySelectorAll('.time-btn')
-        .forEach(el => el.classList.remove('selected'));
-
-      btn.classList.add('selected');
-
-      selected.time = time.start;
-
-    };
-
-    timesEl.appendChild(btn);
-
-  });
-
-}
-
-function showError(message) {
-
-  const el = document.getElementById('errorMessage');
-
-  el.style.display = 'block';
-  el.textContent = message;
-
-}
-
-function showSuccess(message) {
-
-  const el = document.getElementById('successMessage');
-
-  el.style.display = 'block';
-  el.innerHTML = message;
-
-}
-
-document.getElementById('submitBtn').onclick = async () => {
-
-  try {
-
-    document.getElementById('errorMessage').style.display = 'none';
-    document.getElementById('successMessage').style.display = 'none';
-
-    const nameKana = document.getElementById('nameKana').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const confirmed = document.getElementById('confirmed').checked;
-
-    if (!selected.date) throw new Error('日付を選択してください');
-    if (!selected.time) throw new Error('時間を選択してください');
-    if (!nameKana) throw new Error('名前を入力してください');
-    if (!phone) throw new Error('電話番号を入力してください');
-    if (!email) throw new Error('メールアドレスを入力してください');
-    if (!confirmed) throw new Error('確認事項にチェックしてください');
-
-    document.getElementById('loading').style.display = 'block';
-
-    const response = await fetch('/api/book', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        nameKana,
-        phone,
-        email,
-        bookingDate: selected.date,
-        bookingStartTime: selected.time,
-        confirmed: '確認済み'
-      })
-    });
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.message || '予約失敗');
+    function clearMessages() {
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'none';
+      document.getElementById('errorMessage').textContent = '';
+      document.getElementById('successMessage').innerHTML = '';
     }
 
-    showSuccess(`
-      予約が完了しました。<br><br>
-      日付：${data.bookingDate}<br>
-      時間：${data.bookingStartTime}〜${data.bookingEndTime}
-    `);
+    function showError(message) {
+      const el = document.getElementById('errorMessage');
+      el.style.display = 'block';
+      el.textContent = message;
+    }
 
-  } catch (error) {
+    function showSuccess(message) {
+      const el = document.getElementById('successMessage');
+      el.style.display = 'block';
+      el.innerHTML = message;
+    }
 
-    showError(error.message);
+    async function loadSlots() {
+      try {
+        const response = await fetch('/api/slots');
+        const data = await response.json();
 
-  } finally {
+        if (!data.success) {
+          throw new Error(data.message || '空き枠取得に失敗しました。');
+        }
 
-    document.getElementById('loading').style.display = 'none';
+        scheduleData = data.dates || [];
+        renderDates(scheduleData);
 
-  }
+      } catch (error) {
+        showError(error.message || '空き枠取得エラー');
+      }
+    }
 
-};
+    function renderDates(dates) {
+      const datesEl = document.getElementById('dates');
+      const timesEl = document.getElementById('times');
+      const emptyDates = document.getElementById('emptyDates');
+      const emptyTimes = document.getElementById('emptyTimes');
 
-loadSlots();
+      datesEl.innerHTML = '';
+      timesEl.innerHTML = '';
+      emptyTimes.style.display = 'none';
 
-</script>
+      selected.date = '';
+      selected.time = '';
 
+      if (!dates.length) {
+        emptyDates.style.display = 'block';
+        return;
+      }
+
+      emptyDates.style.display = 'none';
+
+      dates.forEach(date => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'date-btn';
+        btn.textContent = date.label;
+
+        btn.onclick = () => {
+          document.querySelectorAll('.date-btn')
+            .forEach(el => el.classList.remove('selected'));
+
+          btn.classList.add('selected');
+          selected.date = date.value;
+          selected.time = '';
+
+          renderTimes(date.times || []);
+          clearMessages();
+        };
+
+        datesEl.appendChild(btn);
+      });
+    }
+
+    function renderTimes(times) {
+      const timesEl = document.getElementById('times');
+      const emptyTimes = document.getElementById('emptyTimes');
+
+      timesEl.innerHTML = '';
+
+      if (!times.length) {
+        emptyTimes.style.display = 'block';
+        return;
+      }
+
+      emptyTimes.style.display = 'none';
+
+      times.forEach(time => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'time-btn';
+        btn.textContent = time.label;
+
+        btn.onclick = () => {
+          document.querySelectorAll('.time-btn')
+            .forEach(el => el.classList.remove('selected'));
+
+          btn.classList.add('selected');
+          selected.time = time.start;
+          clearMessages();
+        };
+
+        timesEl.appendChild(btn);
+      });
+    }
+
+    function normalizePhone(value) {
+      return String(value || '').replace(/\D/g, '');
+    }
+
+    function isValidMobilePhone(value) {
+      return /^0\d{10}$/.test(normalizePhone(value));
+    }
+
+    document.getElementById('submitBtn').onclick = async () => {
+      const submitBtn = document.getElementById('submitBtn');
+
+      try {
+        clearMessages();
+
+        const nameKana = document.getElementById('nameKana').value.trim();
+        const phone = normalizePhone(document.getElementById('phone').value.trim());
+        const email = document.getElementById('email').value.trim();
+        const confirmed = document.getElementById('confirmed').checked;
+
+        if (!selected.date) throw new Error('日付を選択してください。');
+        if (!selected.time) throw new Error('時間を選択してください。');
+        if (!nameKana) throw new Error('お名前（ひらがな）を入力してください。');
+        if (!phone) throw new Error('電話番号を入力してください。');
+        if (!isValidMobilePhone(phone)) throw new Error('電話番号は11桁の携帯番号を入力してください。');
+        if (!email) throw new Error('メールアドレスを入力してください。');
+        if (!confirmed) throw new Error('確認事項にチェックしてください。');
+
+        submitBtn.disabled = true;
+        document.getElementById('loading').style.display = 'block';
+
+        const response = await fetch('/api/book', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nameKana,
+            phone,
+            email,
+            bookingDate: selected.date,
+            bookingStartTime: selected.time,
+            confirmed: '確認済み'
+          })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.message || '予約に失敗しました。');
+        }
+
+        showSuccess(`
+          予約が完了しました。<br><br>
+          日付：${data.bookingDate}<br>
+          時間：${data.bookingStartTime}〜${data.bookingEndTime}
+        `);
+
+        await loadSlots();
+
+      } catch (error) {
+        showError(error.message || '送信エラーが発生しました。');
+      } finally {
+        submitBtn.disabled = false;
+        document.getElementById('loading').style.display = 'none';
+      }
+    };
+
+    loadSlots();
+  </script>
 </body>
 </html>
