@@ -6,9 +6,7 @@
   <title>失業保険の無料カウンセリング</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -275,6 +273,14 @@
       <div class="section">
 
         <div class="field">
+          <label>お名前（漢字）<span class="required">*</span></label>
+          <div class="help">
+            外国籍の方など、漢字での入力が難しい場合はカタカナ等でご入力ください。
+          </div>
+          <input type="text" id="fullName" placeholder="回答を入力">
+        </div>
+
+        <div class="field">
           <label>お名前（ひらがな）<span class="required">*</span></label>
           <input type="text" id="nameKana" placeholder="回答を入力">
         </div>
@@ -440,6 +446,7 @@
       try {
         clearMessages();
 
+        const fullName = document.getElementById('fullName').value.trim();
         const nameKana = document.getElementById('nameKana').value.trim();
         const phone = normalizePhone(document.getElementById('phone').value.trim());
         const email = document.getElementById('email').value.trim();
@@ -447,6 +454,7 @@
 
         if (!selected.date) throw new Error('日付を選択してください。');
         if (!selected.time) throw new Error('時間を選択してください。');
+        if (!fullName) throw new Error('お名前（漢字）を入力してください。');
         if (!nameKana) throw new Error('お名前（ひらがな）を入力してください。');
         if (!phone) throw new Error('電話番号を入力してください。');
         if (!isValidMobilePhone(phone)) throw new Error('電話番号は11桁の携帯番号を入力してください。');
@@ -462,6 +470,7 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            fullName,
             nameKana,
             phone,
             email,
